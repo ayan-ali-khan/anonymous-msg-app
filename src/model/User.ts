@@ -1,6 +1,7 @@
-import mongoose from 'mongoose'
+import mongoose, { ObjectId } from 'mongoose'
 
 export interface Message extends mongoose.Document {
+    _id: string | ObjectId;
     content: string;
     createdAt: Date;
 }

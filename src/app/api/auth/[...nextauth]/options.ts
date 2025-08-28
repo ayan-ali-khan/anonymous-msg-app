@@ -11,9 +11,8 @@ export const authOptions: NextAuthOptions = {
             name: "Credentils",
 
             credentials: {
-                email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
-                password: { label: "Password", type: "password" 
-                }
+                email: { label: "Email or Username", type: "text"},
+                password: { label: "Password", type: "password"}
             },
             async authorize(credentials: any): Promise<any> {
                 await dbConnect();
@@ -38,8 +37,16 @@ export const authOptions: NextAuthOptions = {
                     if(!isPasswordCorrect){
                         throw new Error("Incorrect Password");
                     }
+
+                    return {
+                        email: user.email,
+                        username: user.username,
+                        isVerified: user.isVerified,
+                        isAcceptingMessages: user.isAcceptingMessage
+                    };
+
                 } catch (error: any) {
-                    throw new Error("Error connecting to database", error)
+                    throw new Error(error.message || "Error connecting to database");
                 }
             }
         })
@@ -59,7 +66,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }){
             if(token){
                 session.user._id = token._id;
-                session.user.isVerfied = token.isVerfied;
+                session.user.isVerified = token.isVerified;
                 session.user.isAcceptingMessages = token.isAcceptingMessages;
                 session.user.username = token.username;
             }

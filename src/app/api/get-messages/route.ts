@@ -4,7 +4,7 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import mongoose from "mongoose";
 
-export async function POST(request: Request){
+export async function GET(request: Request){
     await dbConnect()
 
     const session = await getServerSession(authOptions);
@@ -26,9 +26,9 @@ export async function POST(request: Request){
             { $group: {_id: '$id', messages: {$push: '$messages'}}}
         ])
 
-        if(!user || user.length === 0){
+        if(user.length === 0){
             return Response.json({
-                success: false, message: "User not found or no messages are available"
+                success: false, message: " no messages are available"
             }, {status: 401})
         }
 
